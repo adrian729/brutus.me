@@ -2,13 +2,8 @@
 import { resolve } from 'node:path';
 import tailwindTypography from '@tailwindcss/typography';
 
-function withOpacity(variableName: string) {
-    return ({ opacityValue }) => {
-        if (opacityValue !== undefined)
-            return `rgba(var(${variableName}), ${opacityValue})`;
-
-        return `rgb(var(${variableName}))`;
-    };
+function customColorWithAlpha(color: string) {
+    return `rgb(from var(${color}) r g b / <alpha-value>)`;
 }
 
 export default defineNuxtConfig({
@@ -36,6 +31,7 @@ export default defineNuxtConfig({
         '@vueuse/nuxt',
         '@nuxtjs/i18n',
         '@hebilicious/vue-query-nuxt',
+        '@nuxtjs/html-validator',
     ],
 
     typescript: {
@@ -43,12 +39,16 @@ export default defineNuxtConfig({
         strict: true,
         compilerOptions: {
             skipLibCheck: true,
+            module: 'ESNext',
+            lib: ['ESNext'],
+            target: 'esnext',
         },
-        exclude: ['**/node_modules'],
+        exclude: ['**/node_modules', '**/.nuxt', '**/dist', '**/.git', '**/pnpm-lock.yaml', '**/yarn.lock', '**/package-lock.json'],
     },
 
     tailwindcss: {
         cssPath: ['~/assets/tailwind.scss', { injectPosition: 'first' }],
+        viewer: true,
         configPath: 'tailwind.config',
         exposeConfig: {
             level: 2,
@@ -67,22 +67,22 @@ export default defineNuxtConfig({
                 extend: {
                     textColor: {
                         skin: {
-                            base: withOpacity('--color-text-base'),
-                            muted: withOpacity('--color-text-muted'),
-                            inverted: withOpacity('--color-text-inverted'),
+                            base: customColorWithAlpha('--color-text-base'),
+                            muted: customColorWithAlpha('--color-text-muted'),
+                            inverted: customColorWithAlpha('--color-text-inverted'),
                         },
                     },
                     backgroundColor: {
                         skin: {
-                            'fill': withOpacity('--color-fill'),
-                            'button-accent': withOpacity('--color-button-accent'),
-                            'button-accent-hover': withOpacity('--color-button-accent-hover'),
-                            'button-muted': withOpacity('--color-button-muted'),
+                            'fill': customColorWithAlpha('--color-fill'),
+                            'button-accent': customColorWithAlpha('--color-button-accent'),
+                            'button-accent-hover': customColorWithAlpha('--color-button-accent-hover'),
+                            'button-muted': customColorWithAlpha('--color-button-muted'),
                         },
                     },
                     gradientColorStops: {
                         skin: {
-                            hue: withOpacity('--color-fill'),
+                            hue: customColorWithAlpha('--color-fill'),
                         },
                     },
                 },
@@ -92,8 +92,9 @@ export default defineNuxtConfig({
             },
             plugins: [tailwindTypography],
         },
-        viewer: true,
     },
+
+    css: [],
 
     colorMode: {
         classSuffix: '',
