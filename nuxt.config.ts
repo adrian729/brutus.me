@@ -7,16 +7,24 @@ function customColorWithAlpha(color: string) {
 }
 
 export default defineNuxtConfig({
-    head: {
-        title: 'portfolio-nuxt-tailwindcss-typescript',
-        meta: [
-            { charset: 'utf-8' },
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { hid: 'description', name: 'description', content: '' },
-        ],
-        link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        ],
+    app: {
+        head: {
+            title: 'portfolio-nuxt-tailwindcss-typescript',
+            meta: [
+                { charset: 'utf-8' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { hid: 'description', name: 'description', content: '' },
+            ],
+            link: [
+                { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            ],
+            htmlAttrs: {
+                lang: 'en',
+            },
+            noscript: [
+                { children: 'JavaScript is required' },
+            ],
+        },
     },
 
     devtools: { enabled: true },
@@ -37,13 +45,15 @@ export default defineNuxtConfig({
     typescript: {
         typeCheck: true,
         strict: true,
-        compilerOptions: {
-            skipLibCheck: true,
-            module: 'ESNext',
-            lib: ['ESNext'],
-            target: 'esnext',
+        tsConfig: {
+            compilerOptions: {
+                skipLibCheck: true,
+                module: 'ESNext',
+                lib: ['ESNext'],
+                target: 'esnext',
+            },
+            exclude: ['**/node_modules', '**/.nuxt', '**/dist', '**/.git', '**/pnpm-lock.yaml', '**/yarn.lock', '**/package-lock.json'],
         },
-        exclude: ['**/node_modules', '**/.nuxt', '**/dist', '**/.git', '**/pnpm-lock.yaml', '**/yarn.lock', '**/package-lock.json'],
     },
 
     tailwindcss: {
@@ -102,6 +112,7 @@ export default defineNuxtConfig({
 
     // TODO: config i18n for SS-translations and SEO at https://i18n.nuxtjs.org/docs/guide/server-side-translations and https://i18n.nuxtjs.org/docs/guide/seo
     i18n: {
+        baseUrl: 'http://localhost:3000/',
         strategy: 'prefix_and_default',
         defaultLocale: 'en',
         locales: [
@@ -118,6 +129,9 @@ export default defineNuxtConfig({
                 iso: 'fr-FR',
             },
         ],
+        experimental: {
+            localeDetector: './composables/localeDetector.ts',
+        },
     },
 
 });
