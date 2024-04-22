@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { resolve } from 'node:path';
-import tailwindTypography from '@tailwindcss/typography';
 
 function customColorWithAlpha(color: string) {
     return `rgb(from var(${color}) r g b / <alpha-value>)`;
@@ -33,31 +32,34 @@ export default defineNuxtConfig({
         '@': resolve(__dirname, '/'),
     },
 
+    routeRules: {
+        '/': { redirect: '/en' },
+    },
+
     modules: [
+        '@nuxt/eslint',
         '@nuxtjs/tailwindcss',
         '@nuxtjs/color-mode',
         '@vueuse/nuxt',
         '@nuxtjs/i18n',
-        '@hebilicious/vue-query-nuxt',
         '@nuxtjs/html-validator',
     ],
 
     typescript: {
         typeCheck: true,
         strict: true,
+        shim: true, // Generate a *.vue shim. (recommended to false, maybe needed true for ESLint)
         tsConfig: {
             compilerOptions: {
-                skipLibCheck: true,
-                module: 'ESNext',
-                lib: ['ESNext'],
-                target: 'esnext',
-            },
-            exclude: ['**/node_modules', '**/.nuxt', '**/dist', '**/.git', '**/pnpm-lock.yaml', '**/yarn.lock', '**/package-lock.json'],
+                lib: ['esnext', 'esnext.asynciterable', 'dom', 'dom.iterable'],
+                incremental: true,
+                sourceMap: true,
+            }
         },
     },
 
     tailwindcss: {
-        cssPath: ['~/assets/tailwind.scss', { injectPosition: 'first' }],
+        cssPath: ['~/assets/scss/tailwind.scss', { injectPosition: 'first' }],
         viewer: true,
         configPath: 'tailwind.config',
         exposeConfig: {
@@ -75,19 +77,25 @@ export default defineNuxtConfig({
             ],
             theme: {
                 extend: {
+                    colors: {
+                        skin: {
+                            'base': customColorWithAlpha('--color-text-base'),
+                            'inverted': customColorWithAlpha('--color-text-inverted'),
+                            'fill': customColorWithAlpha('--color-fill'),
+                            'fill-inverted': customColorWithAlpha('--color-fill-inverted'),
+                            'gradient': customColorWithAlpha('--color-fill'),
+                        },
+                    },
                     textColor: {
                         skin: {
                             base: customColorWithAlpha('--color-text-base'),
-                            muted: customColorWithAlpha('--color-text-muted'),
                             inverted: customColorWithAlpha('--color-text-inverted'),
                         },
                     },
                     backgroundColor: {
                         skin: {
                             'fill': customColorWithAlpha('--color-fill'),
-                            'button-accent': customColorWithAlpha('--color-button-accent'),
-                            'button-accent-hover': customColorWithAlpha('--color-button-accent-hover'),
-                            'button-muted': customColorWithAlpha('--color-button-muted'),
+                            'fill-inverted': customColorWithAlpha('--color-fill-inverted'),
                         },
                     },
                     gradientColorStops: {
@@ -100,7 +108,7 @@ export default defineNuxtConfig({
             variants: {
                 extend: {},
             },
-            plugins: [tailwindTypography],
+            plugins: [],
         },
     },
 
@@ -114,19 +122,24 @@ export default defineNuxtConfig({
     i18n: {
         baseUrl: 'http://localhost:3000/',
         strategy: 'prefix_and_default',
+        lazy: true,
+        langDir: 'lang',
         defaultLocale: 'en',
+        detectBrowserLanguage: {
+            useCookie: true,
+            cookieKey: 'i18n_redirected',
+            redirectOn: 'root', // recommended
+        },
         locales: [
             {
                 code: 'en',
                 iso: 'en-US',
+                file: 'en-US.json',
             },
             {
                 code: 'es',
                 iso: 'es-ES',
-            },
-            {
-                code: 'fr',
-                iso: 'fr-FR',
+                file: 'es-ES.json',
             },
         ],
         experimental: {

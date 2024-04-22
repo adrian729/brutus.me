@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-    title: 'pages.title.top', // set resource key
+    layout: 'about',
 });
 
 const { locale, locales, t } = useI18n();
@@ -13,7 +13,7 @@ const availableLocales = computed(() => {
 
 <template>
     <div>
-        <p>{{ t('welcome') }}</p>
+        <p>{{ t('about') }}</p>
         <nav>
             <template v-for="(_locale, index) in availableLocales" :key="_locale.code">
                 <span v-if="index"> | </span>
