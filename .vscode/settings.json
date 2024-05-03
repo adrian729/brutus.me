@@ -1,45 +1,54 @@
 {
-    // Enable the ESlint flat config support
-    "eslint.experimental.useFlatConfig": true,
+    // nuxtr
+    "nuxtr.vueFiles.template.defaultLanguage": "html",
+    "nuxtr.vueFiles.firstTag": "template",
+    "nuxtr.vueFiles.script.type": "setup",
+    "nuxtr.vueFiles.script.defaultLanguage": "ts",
+    "nuxtr.vueFiles.style.addStyleTag": true,
+    "nuxtr.vueFiles.style.alwaysScoped": true,
+    "nuxtr.vueFiles.style.defaultLanguage": "scss",
+    "nuxtr.piniaFiles.defaultTemplate": "options",
+    "nuxtr.openItemsAfterCreation": true,
 
-    // Disable the default formatter, use eslint instead
-    "prettier.enable": false,
-    "editor.formatOnSave": false,
-
-    // Auto fix
+    // Editor settings
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit",
-        "source.organizeImports": "never"
+        "source.fixAll": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "css.customData": [".vscode/tailwind.json"],
+    "[vue]": {
+        "editor.defaultFormatter": "Vue.volar"
     },
 
-    // Silent the stylistic rules in you IDE, but still auto fix them
-    "eslint.rules.customizations": [
-        { "rule": "style/*", "severity": "off" },
-        { "rule": "format/*", "severity": "off" },
-        { "rule": "*-indent", "severity": "off" },
-        { "rule": "*-spacing", "severity": "off" },
-        { "rule": "*-spaces", "severity": "off" },
-        { "rule": "*-order", "severity": "off" },
-        { "rule": "*-dangle", "severity": "off" },
-        { "rule": "*-newline", "severity": "off" },
-        { "rule": "*quotes", "severity": "off" },
-        { "rule": "*semi", "severity": "off" }
-    ],
+    // Custom labels
+    "workbench.editor.customLabels.patterns": {
+        "**/components/**/index.vue": "${dirname} - Component",
+        "**/components/**/*.vue": "${filename} - Component",
+        "**/components/**/components/**/index.vue": "${dirname} - SubComponent",
+        "**/components/**/components/**/*.vue": "${filename} - SubComponent",
+        "**/layouts/**/index.vue": "${dirname} - Layout",
+        "**/layouts/**/*.vue": "${filename} - Layout",
+        "**/pages/**/index.vue": "${dirname} - Page",
+        "**/pages/**/*.vue": "${filename} - Page",
+        "**/composables/**/index.{ts,js}": "${dirname} - Composable",
+        "**/composables/**/*.{ts,js}": "${filename} - Composable",
+        "**/utils/**/index.{ts,js}": "${dirname} - Utils",
+        "**/utils/**/*.{ts,js}": "${filename} - Utils",
+        "**/assets/**/*.*": "${filename}.${extname} - Asset",
+        "**/assets/**/*": "${filename} - Asset",
+        "**/public/**/*.*": "${filename}.${extname} - Public",
+        "**/public/**/*": "${filename} - Public"
+    },
 
-    // Enable eslint for all supported languages
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-        "vue",
-        "html",
-        "markdown",
-        "json",
-        "jsonc",
-        "yaml",
-        "toml",
-        "astro"
-    ],
-    "typescript.tsdk": "node_modules\\typescript\\lib"
+    // Stylelint
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
+    "stylelint.validate": ["css", "scss"],
+
+    // Prettier
+    "prettier.requireConfig": true,
+    "prettier.prettierPath": "node_modules/prettier",
+    "prettier.configPath": ".prettierrc"
 }

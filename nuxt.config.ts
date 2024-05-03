@@ -1,9 +1,26 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { resolve } from 'node:path';
+import { fontSize } from 'tailwindcss/defaultTheme';
+import type { DefaultTheme } from 'tailwindcss/types/generated/default-theme';
 
-function customColorWithAlpha(color: string) {
+function twRgbFromHex(color: string) {
     return `rgb(from var(${color}) r g b / <alpha-value>)`;
 }
+
+function getResponsiveFontSize(size: string): string {
+    const sizeValue = parseFloat(size);
+    return `clamp(${sizeValue}rem, 1.5vw, ${sizeValue * 2}rem)`;
+}
+
+type FontSizeRecord = DefaultTheme['fontSize'];
+const responsiveFontSize: FontSizeRecord = { ...fontSize };
+Object.entries(responsiveFontSize).forEach(([key, value]) => {
+    const [size, lineHeight] = value;
+    responsiveFontSize[key as keyof FontSizeRecord] = [
+        getResponsiveFontSize(size),
+        lineHeight,
+    ];
+});
 
 export default defineNuxtConfig({
     app: {
@@ -11,18 +28,17 @@ export default defineNuxtConfig({
             title: 'portfolio-nuxt-tailwindcss-typescript',
             meta: [
                 { charset: 'utf-8' },
-                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                {
+                    name: 'viewport',
+                    content: 'width=device-width, initial-scale=1',
+                },
                 { hid: 'description', name: 'description', content: '' },
             ],
-            link: [
-                { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            ],
+            link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
             htmlAttrs: {
                 lang: 'en',
             },
-            noscript: [
-                { children: 'JavaScript is required' },
-            ],
+            noscript: [{ children: 'JavaScript is required' }],
         },
     },
 
@@ -42,7 +58,7 @@ export default defineNuxtConfig({
         '@nuxtjs/color-mode',
         '@vueuse/nuxt',
         '@nuxtjs/i18n',
-        '@nuxtjs/html-validator',
+        '@nuxt/fonts',
     ],
 
     typescript: {
@@ -54,7 +70,7 @@ export default defineNuxtConfig({
                 lib: ['esnext', 'esnext.asynciterable', 'dom', 'dom.iterable'],
                 incremental: true,
                 sourceMap: true,
-            }
+            },
         },
     },
 
@@ -77,30 +93,37 @@ export default defineNuxtConfig({
             ],
             theme: {
                 extend: {
+                    backgroundColor: {
+                        skin: {
+                            fill: twRgbFromHex('--color-fill'),
+                            'fill-inverted': twRgbFromHex(
+                                '--color-fill-inverted',
+                            ),
+                        },
+                    },
                     colors: {
                         skin: {
-                            'base': customColorWithAlpha('--color-text-base'),
-                            'inverted': customColorWithAlpha('--color-text-inverted'),
-                            'fill': customColorWithAlpha('--color-fill'),
-                            'fill-inverted': customColorWithAlpha('--color-fill-inverted'),
-                            'gradient': customColorWithAlpha('--color-fill'),
+                            base: twRgbFromHex('--color-text-base'),
+                            inverted: twRgbFromHex('--color-text-inverted'),
+                            fill: twRgbFromHex('--color-fill'),
+                            'fill-inverted': twRgbFromHex(
+                                '--color-fill-inverted',
+                            ),
+                            gradient: twRgbFromHex('--color-fill'),
+                        },
+                    },
+                    fontSize: {
+                        ...responsiveFontSize,
+                    },
+                    gradientColorStops: {
+                        skin: {
+                            hue: twRgbFromHex('--color-fill'),
                         },
                     },
                     textColor: {
                         skin: {
-                            base: customColorWithAlpha('--color-text-base'),
-                            inverted: customColorWithAlpha('--color-text-inverted'),
-                        },
-                    },
-                    backgroundColor: {
-                        skin: {
-                            'fill': customColorWithAlpha('--color-fill'),
-                            'fill-inverted': customColorWithAlpha('--color-fill-inverted'),
-                        },
-                    },
-                    gradientColorStops: {
-                        skin: {
-                            hue: customColorWithAlpha('--color-fill'),
+                            base: twRgbFromHex('--color-text-base'),
+                            inverted: twRgbFromHex('--color-text-inverted'),
                         },
                     },
                 },
@@ -146,5 +169,4 @@ export default defineNuxtConfig({
             localeDetector: './composables/localeDetector.ts',
         },
     },
-
 });

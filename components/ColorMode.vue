@@ -4,29 +4,19 @@ const colorMode = useColorMode();
 
 <template>
     <div>
-        <p class="p-4 pb-2 text-skin-base">
+        <p class="text-skin-base p-4 pb-2">
+            <label for="color-mode" class="mr-2"> Color Mode </label>
             <select
+                id="color-mode"
                 v-model="colorMode.preference"
-                class="border w-24 h-8 bg-skin-fill/60"
+                class="bg-skin-fill/60 h-8 w-24 border"
             >
-                <option value="system">
-                    System
-                </option>
-                <option value="light">
-                    Light
-                </option>
-                <option value="dark">
-                    Dark
-                </option>
-                <option value="sepia">
-                    Sepia
-                </option>
-                <option value="swiss">
-                    Swiss
-                </option>
-                <option value="neon">
-                    Neon
-                </option>
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="sepia">Sepia</option>
+                <option value="swiss">Swiss</option>
+                <option value="neon">Neon</option>
             </select>
         </p>
     </div>
